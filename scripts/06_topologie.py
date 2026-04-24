@@ -1,173 +1,314 @@
-"""Produit la topologie reseau multi-sites Torpier.
-
-Sortie : 06-Topologie-Reseau.png
-Sites : Nanterre (siege + DSI) / Arras (usine FR) / Finlande / Bureaux EU (DE, IT, ES)
-"""
+"""Topologie reseau multi-sites Torpier - version pro."""
 from pathlib import Path
-import matplotlib.pyplot as plt
+import sys
+sys.path.insert(0, str(Path(__file__).parent))
+
+from charte import (Charte, setup_figure, add_header, add_footer,
+                    shadow, save)
 import matplotlib.patches as patches
 
 OUT = Path('/home/user/BLOC4/Livrables/00-Base-Commune')
 
-fig, ax = plt.subplots(figsize=(22, 14))
-ax.set_xlim(0, 22)
-ax.set_ylim(0, 14)
-ax.axis("off")
 
-ax.text(11, 13.4, "Topologie reseau - Groupe Torpier",
-        ha="center", fontsize=24, fontweight="bold", color="#1B3A5B")
-ax.text(11, 12.9, "Interconnexion multi-sites via VPN IPSec (Fortinet)",
-        ha="center", fontsize=12, color="#555", style="italic")
-
-# --- Internet / cloud tiers (haut) ---
-def cloud(x, y, w, h, label, bg="#E3F2FD", edge="#1565C0"):
-    ax.add_patch(patches.FancyBboxPatch((x, y), w, h,
-                                         boxstyle="round,pad=0.15",
-                                         linewidth=1.5, edgecolor=edge,
-                                         facecolor=bg))
-    ax.text(x + w / 2, y + h / 2, label, ha="center", va="center",
-            fontsize=10.5, fontweight="bold", color="#1B3A5B")
-
-cloud(0.5, 11.2, 3.5, 1.0, "Cloud Azure\n(Microsoft Dynamics)")
-cloud(4.5, 11.2, 3.5, 1.0, "Cloud OVH\n(PrestaShop)")
-cloud(8.5, 11.2, 3.5, 1.0, "Cloud Atlassian\n(Jira Service Management)")
-cloud(13.5, 11.2, 3.5, 1.0, "Microsoft 365\n(migration en cours)")
-cloud(17.5, 11.2, 4.0, 1.0, "INTERNET",
-      bg="#FFEBEE", edge="#C62828")
-
-# --- Bandeau firewall Nanterre ---
-ax.add_patch(patches.FancyBboxPatch((7.5, 9.2), 7.0, 1.2,
-                                     boxstyle="round,pad=0.1",
-                                     linewidth=2, edgecolor="#C62828",
-                                     facecolor="#FFF3E0"))
-ax.text(11, 9.95, "FortiGate 200E + Proxy (Nanterre)",
-        ha="center", va="center", fontsize=12, fontweight="bold",
-        color="#C62828")
-ax.text(11, 9.45, "Firewall / IPS / Terminaison VPN / Filtrage Internet",
-        ha="center", va="center", fontsize=9.5, color="#555",
-        style="italic")
-
-# Liens internet -> firewall
-for x_cloud in [2.25, 6.25, 10.25, 15.25, 19.5]:
-    ax.plot([x_cloud, 11], [11.2, 10.4], color="#888", lw=1.2, linestyle=":")
-
-# --- Site Nanterre (siege) ---
-def site(x, y, w, h, title, vlans, color, subtitle=""):
-    ax.add_patch(patches.FancyBboxPatch((x, y), w, h,
-                                         boxstyle="round,pad=0.1",
-                                         linewidth=2, edgecolor=color,
-                                         facecolor="white"))
-    # bandeau titre
-    ax.add_patch(patches.Rectangle((x, y + h - 0.6), w, 0.6,
-                                    linewidth=0, facecolor=color))
-    ax.text(x + w / 2, y + h - 0.3, title, ha="center", va="center",
-            fontsize=12, fontweight="bold", color="white")
+def site_card(ax, x, y, w, h, title, subtitle, items, color, soft,
+              badge_text=None):
+    """Dessine une carte de site avec bandeau colore et items."""
+    # ombre
+    shadow(ax, x, y, w, h)
+    # fond blanc + contour
+    ax.add_patch(patches.FancyBboxPatch(
+        (x, y), w, h,
+        boxstyle="round,pad=0.02,rounding_size=0.4",
+        linewidth=0.9, edgecolor=Charte.LINE,
+        facecolor="white", zorder=2))
+    # bandeau colore en haut
+    band_h = 2.4
+    ax.add_patch(patches.Rectangle(
+        (x, y + h - band_h), w, band_h,
+        linewidth=0, facecolor=color, zorder=3))
+    # contour arrondi global
+    ax.add_patch(patches.FancyBboxPatch(
+        (x, y), w, h,
+        boxstyle="round,pad=0.02,rounding_size=0.4",
+        linewidth=0.9, edgecolor=Charte.LINE,
+        facecolor="none", zorder=5))
+    # titre
+    ax.text(x + 0.9, y + h - 0.9, title,
+            ha="left", va="center",
+            fontsize=12, fontweight="bold", color="white",
+            zorder=4, family=Charte.FONT)
+    # sous-titre
     if subtitle:
-        ax.text(x + w / 2, y + h - 0.85, subtitle, ha="center", va="center",
-                fontsize=9, color="#555", style="italic")
-    # VLAN / composants
-    nlines = len(vlans)
-    yy_top = y + h - 1.2
-    dy = (h - 1.4) / max(nlines, 1)
-    for i, vlan in enumerate(vlans):
-        yy = yy_top - i * dy - dy / 2
-        ax.add_patch(patches.FancyBboxPatch((x + 0.2, yy - dy / 2 + 0.05),
-                                             w - 0.4, dy - 0.1,
-                                             boxstyle="round,pad=0.02",
-                                             linewidth=0.7, edgecolor=color,
-                                             facecolor="#F8F9FA"))
-        ax.text(x + w / 2, yy, vlan, ha="center", va="center",
-                fontsize=9, color="#222222")
+        ax.text(x + 0.9, y + h - 1.9, subtitle,
+                ha="left", va="center",
+                fontsize=8.8, color="white", alpha=0.9,
+                zorder=4, family=Charte.FONT, style="italic")
+    # badge (optionnel) en haut a droite
+    if badge_text:
+        bw, bh = 4.0, 0.9
+        bx, by = x + w - bw - 0.5, y + h - band_h + 0.55
+        ax.add_patch(patches.FancyBboxPatch(
+            (bx, by), bw, bh,
+            boxstyle="round,pad=0.02,rounding_size=0.2",
+            linewidth=0, facecolor="white", alpha=0.2, zorder=4))
+        ax.text(bx + bw / 2, by + bh / 2, badge_text,
+                ha="center", va="center",
+                fontsize=8, color="white", fontweight="bold",
+                zorder=5, family=Charte.FONT)
+    # items (lignes avec puce)
+    item_y_top = y + h - band_h - 0.6
+    item_y_bot = y + 0.5
+    n = len(items)
+    line_spacing = (item_y_top - item_y_bot) / max(n, 1)
+    for i, (item, is_warning) in enumerate(items):
+        yy = item_y_top - i * line_spacing - line_spacing / 2
+        # puce
+        ax.add_patch(patches.Circle((x + 0.75, yy), 0.11,
+                                    facecolor=Charte.DANGER if is_warning else color,
+                                    zorder=4))
+        ax.text(x + 1.2, yy, item,
+                ha="left", va="center",
+                fontsize=8.5,
+                color=Charte.DANGER if is_warning else Charte.INK,
+                fontweight="bold" if is_warning else "normal",
+                family=Charte.FONT, zorder=4)
 
-# NANTERRE (siege + DSI)
-site(6.0, 5.0, 10.0, 4.0, "NANTERRE - Siege (DG + DSI + Services)",
-     [
-         "VLAN 10 - Direction Generale",
-         "VLAN 20 - DSI postes (GitLab, poste test)",
-         "VLAN 21 - DSI serveurs (Hyper-V, SQL cluster, AD DS, DFS, Veeam, WSUS, RDS, Exchange)",
-         "VLAN 30 - Administratif & RH (SAGE Compta/Paie, DocuFlow)",
-         "VLAN 40 - Commercial & Marketing (Dynamics, PrestaShop admin)",
-         "Switches Cisco Catalyst (coeur) + SG (acces) | Routeur Cisco ISR 4000",
-     ],
-     "#1B3A5B")
 
-# ARRAS (usine FR)
-site(0.5, 1.0, 6.5, 3.6, "ARRAS - Usine FR",
-     [
-         "VLAN 50 - Production & Conception",
-         "GesProd (serveur metier)",
-         "Qualeval",
-         "Postes PC Windows 11 (artisans)",
-         "Postes conception (Revit + MacBook ArchiCAD)",
-         "Replica AD DS (secondaire)",
-         "Imprimantes (3) + switches SG",
-     ],
-     "#2E7D32", subtitle="Conception + R&D + Fabrication structures/mobiliers")
+def cloud_pill(ax, x, y, w, h, label):
+    """Pilule cloud tiers (style neutre)."""
+    ax.add_patch(patches.FancyBboxPatch(
+        (x, y), w, h,
+        boxstyle="round,pad=0.02,rounding_size=0.45",
+        linewidth=1, edgecolor=Charte.INFO,
+        facecolor=Charte.INFO_SOFT, zorder=2))
+    ax.text(x + w / 2, y + h / 2, label,
+            ha="center", va="center",
+            fontsize=9, color=Charte.PRIMARY,
+            family=Charte.FONT, fontweight="bold",
+            zorder=3)
 
-# FINLANDE
-site(8.5, 1.0, 6.5, 3.6, "FINLANDE - Usine bois",
-     [
-         "VLAN 60 - Usine finlandaise",
-         "Acces aux applis via VPN IPSec",
-         "GesProd (acces distant)",
-         "Qualeval (acces distant)",
-         "Postes PC Windows 11 (artisans)",
-         "PAS de replica AD DS (point de vigilance)",
-         "Switches SG + imprimantes (3)",
-     ],
-     "#EF6C00", subtitle="Fabrication - 11 artisans (Sofia Jansson)")
 
-# BUREAUX EU (DE/IT/ES)
-site(16.5, 1.0, 5.0, 3.6, "BUREAUX EU",
-     [
-         "Allemagne (DE) - 1 commercial + 1 gerant",
-         "Italie (IT) - 1 commercial + 1 gerant",
-         "Espagne (ES) - 1 commercial + 1 gerant",
-         "Acces VPN client -> Nanterre",
-         "Applis utilisees : Dynamics, Teams/Exchange",
-         "Postes PC portables Windows 11",
-     ],
-     "#6A1B9A", subtitle="Bureaux commerciaux ouverts en 2023")
+def render() -> Path:
+    fig, ax, W, H = setup_figure()
+    add_header(
+        ax,
+        title="Topologie reseau - Groupe Torpier",
+        subtitle="Interconnexion multi-sites via VPN IPSec (Fortinet) - sites FR, Finlande, bureaux EU",
+        width=W, height=H,
+        kicker="Phase 1 - Cartographie",
+    )
 
-# --- Liens VPN IPSec ---
-# Nanterre <-> Arras
-ax.annotate("", xy=(6.0, 3.9), xytext=(8.0, 5.0),
-            arrowprops=dict(arrowstyle="<->", lw=2.2, color="#1565C0"))
-ax.text(5.8, 4.85, "VPN IPSec\nSite-to-Site", ha="center", va="center",
-        fontsize=9, color="#1565C0", fontweight="bold",
-        bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="#1565C0"))
+    # ===== 1. Zone Cloud & Internet (haut) =====
+    cloud_y = H - 12
+    cloud_h = 1.8
+    cloud_items = [
+        ("Cloud Azure\n(Microsoft Dynamics)", Charte.INFO),
+        ("Cloud OVH\n(PrestaShop)", Charte.INFO),
+        ("Cloud Atlassian\n(Jira Service)", Charte.INFO),
+        ("Microsoft 365\n(en migration)", Charte.INFO),
+    ]
+    internet_w = 6
+    total_cloud_w = (W - 2 * Charte.MARGIN_X - internet_w - 1.5)
+    cloud_w = (total_cloud_w - 3 * 0.8) / 4
+    cx = Charte.MARGIN_X
+    for label, _ in cloud_items:
+        ax.add_patch(patches.FancyBboxPatch(
+            (cx, cloud_y), cloud_w, cloud_h,
+            boxstyle="round,pad=0.02,rounding_size=0.35",
+            linewidth=1, edgecolor=Charte.INFO,
+            facecolor=Charte.INFO_SOFT, zorder=2))
+        ax.text(cx + cloud_w / 2, cloud_y + cloud_h / 2, label,
+                ha="center", va="center",
+                fontsize=9, color=Charte.PRIMARY,
+                family=Charte.FONT, fontweight="bold",
+                zorder=3)
+        cx += cloud_w + 0.8
+    # Internet
+    ix = W - Charte.MARGIN_X - internet_w
+    ax.add_patch(patches.FancyBboxPatch(
+        (ix, cloud_y), internet_w, cloud_h,
+        boxstyle="round,pad=0.02,rounding_size=0.35",
+        linewidth=1, edgecolor=Charte.DANGER,
+        facecolor=Charte.DANGER_SOFT, zorder=2))
+    ax.text(ix + internet_w / 2, cloud_y + cloud_h / 2, "INTERNET",
+            ha="center", va="center",
+            fontsize=11, color=Charte.DANGER,
+            family=Charte.FONT, fontweight="bold",
+            zorder=3)
 
-# Nanterre <-> Finlande (lien vertical simple puisque directement en-dessous)
-ax.annotate("", xy=(11, 4.3), xytext=(11, 5.0),
-            arrowprops=dict(arrowstyle="<->", lw=2.2, color="#1565C0"))
-ax.text(12.8, 4.7, "VPN IPSec\nSite-to-Site", ha="center", va="center",
-        fontsize=9, color="#1565C0", fontweight="bold",
-        bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="#1565C0"))
+    # ===== 2. FortiGate + Proxy (dessus du siege) =====
+    fg_y = cloud_y - 3.5
+    fg_h = 2.2
+    fg_w = 38
+    fg_x = (W - fg_w) / 2
+    shadow(ax, fg_x, fg_y, fg_w, fg_h)
+    ax.add_patch(patches.FancyBboxPatch(
+        (fg_x, fg_y), fg_w, fg_h,
+        boxstyle="round,pad=0.02,rounding_size=0.4",
+        linewidth=1.2, edgecolor=Charte.DANGER,
+        facecolor="white", zorder=3))
+    # bande rouge gauche
+    ax.add_patch(patches.Rectangle(
+        (fg_x, fg_y), 0.9, fg_h,
+        linewidth=0, facecolor=Charte.DANGER, zorder=4))
+    ax.text(fg_x + 2, fg_y + fg_h / 2 + 0.25,
+            "FortiGate 200E + Proxy (Nanterre)",
+            ha="left", va="center",
+            fontsize=12, fontweight="bold", color=Charte.DANGER,
+            zorder=5, family=Charte.FONT)
+    ax.text(fg_x + 2, fg_y + fg_h / 2 - 0.55,
+            "Firewall / IPS / Terminaison VPN / Filtrage Internet",
+            ha="left", va="center",
+            fontsize=9, color=Charte.INK_SOFT, style="italic",
+            zorder=5, family=Charte.FONT)
 
-# Nanterre <-> Bureaux EU
-ax.annotate("", xy=(17.0, 3.9), xytext=(15.0, 5.0),
-            arrowprops=dict(arrowstyle="<->", lw=2.2, color="#6A1B9A"))
-ax.text(16.9, 4.85, "VPN client\n(Fortinet)", ha="center", va="center",
-        fontsize=9, color="#6A1B9A", fontweight="bold",
-        bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="#6A1B9A"))
+    # Liens Internet / clouds -> Firewall
+    fg_mid_x = fg_x + fg_w / 2
+    for base_x in [Charte.MARGIN_X + cloud_w / 2,
+                   Charte.MARGIN_X + cloud_w * 1.5 + 0.8,
+                   Charte.MARGIN_X + cloud_w * 2.5 + 1.6,
+                   Charte.MARGIN_X + cloud_w * 3.5 + 2.4,
+                   ix + internet_w / 2]:
+        ax.plot([base_x, fg_mid_x], [cloud_y, fg_y + fg_h],
+                color=Charte.MUTED, lw=0.9, linestyle=":", zorder=1)
 
-# Lien Nanterre -> firewall
-ax.plot([11, 11], [9.2, 9.0], color="#C62828", lw=2)
+    # ===== 3. Nanterre (siege) =====
+    nan_y = fg_y - 14
+    nan_h = 12.5
+    nan_w = 38
+    nan_x = fg_x
+    nanterre_items = [
+        ("VLAN 10 - Direction generale", False),
+        ("VLAN 20 - DSI postes (GitLab, poste test)", False),
+        ("VLAN 21 - DSI serveurs (SQL, AD DS, DFS, Veeam, RDS, Exchange)", False),
+        ("VLAN 30 - Administratif & RH (SAGE, DocuFlow)", False),
+        ("VLAN 40 - Commercial & Marketing (Dynamics)", False),
+        ("Cisco Catalyst (coeur) + SG (acces)", False),
+        ("Routeurs Cisco ISR 4000", False),
+    ]
+    site_card(ax, nan_x, nan_y, nan_w, nan_h,
+              "NANTERRE - Siege",
+              "DG + DSI + Services centraux",
+              nanterre_items,
+              Charte.PRIMARY, Charte.BG_SOFT,
+              badge_text="Site principal")
+    # lien firewall -> Nanterre
+    ax.plot([fg_mid_x, nan_x + nan_w / 2], [fg_y, nan_y + nan_h],
+            color=Charte.DANGER, lw=2, zorder=1)
 
-# Legende
-ax.text(0.5, 0.45, "Legende :", fontsize=10, fontweight="bold", color="#222")
-ax.plot([2.2, 3.5], [0.5, 0.5], color="#1565C0", lw=2.2)
-ax.text(3.7, 0.5, "VPN IPSec Site-to-Site (Fortinet)", fontsize=9, va="center",
-        color="#222")
-ax.plot([9.6, 10.8], [0.5, 0.5], color="#6A1B9A", lw=2.2)
-ax.text(11.0, 0.5, "VPN client (teletravail / bureaux EU)", fontsize=9,
-        va="center", color="#222")
-ax.plot([16.3, 17.5], [0.5, 0.5], color="#888", lw=1.2, linestyle=":")
-ax.text(17.7, 0.5, "Liens Internet / cloud tiers", fontsize=9, va="center",
-        color="#222")
+    # ===== 4. Sites distants (bas) =====
+    sites_y = 4.5
+    sites_h = 14.5
+    site_w = (W - 2 * Charte.MARGIN_X - 2 * 1.2) / 3
 
-png_path = OUT / "06-Topologie-Reseau.png"
-plt.tight_layout()
-plt.savefig(png_path, dpi=200, bbox_inches="tight", facecolor="white")
-plt.close()
-print(f"OK PNG : {png_path}")
+    # ARRAS
+    arras_items = [
+        ("VLAN 50 - Production & Conception", False),
+        ("GesProd (serveur metier)", False),
+        ("Qualeval (qualite)", False),
+        ("Replica AD DS secondaire", False),
+        ("Postes Windows 11 (artisans)", False),
+        ("Postes conception (Revit + MacBook ArchiCAD)", False),
+        ("Switches Cisco SG + 3 imprimantes", False),
+    ]
+    site_card(ax, Charte.MARGIN_X, sites_y, site_w, sites_h,
+              "ARRAS - Usine France",
+              "Conception + R&D + Fabrication",
+              arras_items,
+              Charte.SUCCESS, Charte.SUCCESS_SOFT,
+              badge_text="VPN IPSec")
+
+    # FINLANDE
+    fi_x = Charte.MARGIN_X + site_w + 1.2
+    finlande_items = [
+        ("VLAN 60 - Usine finlandaise", False),
+        ("Acces applis via VPN IPSec", False),
+        ("GesProd (acces distant)", False),
+        ("Qualeval (acces distant)", False),
+        ("Postes Windows 11 (artisans)", False),
+        ("PAS de replica AD DS", True),
+        ("Switches SG + 3 imprimantes", False),
+    ]
+    site_card(ax, fi_x, sites_y, site_w, sites_h,
+              "FINLANDE - Usine bois",
+              "Fabrication - 11 artisans (Sofia Jansson)",
+              finlande_items,
+              Charte.ACCENT, Charte.ACCENT_LIGHT,
+              badge_text="VPN IPSec")
+
+    # BUREAUX EU
+    eu_x = Charte.MARGIN_X + 2 * (site_w + 1.2)
+    eu_items = [
+        ("Allemagne (DE) - 1 commercial + 1 gerant", False),
+        ("Italie (IT) - 1 commercial + 1 gerant", False),
+        ("Espagne (ES) - 1 commercial + 1 gerant", False),
+        ("Acces VPN client (Fortinet) -> Nanterre", False),
+        ("Applis : Dynamics, Teams, Exchange", False),
+        ("Postes PC portables Windows 11", False),
+    ]
+    site_card(ax, eu_x, sites_y, site_w, sites_h,
+              "BUREAUX EU",
+              "3 bureaux commerciaux (ouverts en 2023)",
+              eu_items,
+              Charte.VIOLET, Charte.VIOLET_SOFT,
+              badge_text="VPN client")
+
+    # ===== 5. Liens VPN =====
+    nan_mid_x = nan_x + nan_w / 2
+
+    # Arras
+    arras_top_x = Charte.MARGIN_X + site_w / 2
+    ax.plot([arras_top_x, nan_mid_x - 8],
+            [sites_y + sites_h, nan_y],
+            color=Charte.INFO, lw=2, zorder=1)
+    ax.add_patch(patches.FancyBboxPatch(
+        (nan_mid_x - 16, nan_y - 1.6), 7, 1.2,
+        boxstyle="round,pad=0.02,rounding_size=0.2",
+        linewidth=1, edgecolor=Charte.INFO,
+        facecolor="white", zorder=3))
+    ax.text(nan_mid_x - 12.5, nan_y - 1, "VPN IPSec S2S",
+            ha="center", va="center",
+            fontsize=8.5, color=Charte.INFO, fontweight="bold",
+            zorder=4, family=Charte.FONT)
+
+    # Finlande
+    fi_top_x = fi_x + site_w / 2
+    ax.plot([fi_top_x, nan_mid_x],
+            [sites_y + sites_h, nan_y],
+            color=Charte.INFO, lw=2, zorder=1)
+    ax.add_patch(patches.FancyBboxPatch(
+        (nan_mid_x - 3.5, nan_y - 1.6), 7, 1.2,
+        boxstyle="round,pad=0.02,rounding_size=0.2",
+        linewidth=1, edgecolor=Charte.INFO,
+        facecolor="white", zorder=3))
+    ax.text(nan_mid_x, nan_y - 1, "VPN IPSec S2S",
+            ha="center", va="center",
+            fontsize=8.5, color=Charte.INFO, fontweight="bold",
+            zorder=4, family=Charte.FONT)
+
+    # Bureaux EU
+    eu_top_x = eu_x + site_w / 2
+    ax.plot([eu_top_x, nan_mid_x + 8],
+            [sites_y + sites_h, nan_y],
+            color=Charte.VIOLET, lw=2, zorder=1)
+    ax.add_patch(patches.FancyBboxPatch(
+        (nan_mid_x + 9, nan_y - 1.6), 7, 1.2,
+        boxstyle="round,pad=0.02,rounding_size=0.2",
+        linewidth=1, edgecolor=Charte.VIOLET,
+        facecolor="white", zorder=3))
+    ax.text(nan_mid_x + 12.5, nan_y - 1, "VPN client",
+            ha="center", va="center",
+            fontsize=8.5, color=Charte.VIOLET, fontweight="bold",
+            zorder=4, family=Charte.FONT)
+
+    add_footer(ax, page_label="Fiche 06 - Topologie reseau",
+               width=W, height=H)
+
+    out = OUT / "06-Topologie-Reseau.png"
+    save(fig, out)
+    return out
+
+
+if __name__ == "__main__":
+    p = render()
+    print(f"OK PNG : {p}")

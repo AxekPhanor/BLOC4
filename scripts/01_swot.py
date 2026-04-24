@@ -1,156 +1,253 @@
-"""Produit le SWOT Torpier en Excel (format 2x2) + PNG lisible."""
+"""Produit le SWOT Torpier - version pro (PNG) + Excel propre."""
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).parent))
+
+from charte import (Charte, setup_figure, add_header, add_footer,
+                    card, band, shadow, save, wrap, excel_styles)
+import matplotlib.patches as patches
 from openpyxl import Workbook
-from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 
 OUT = Path('/home/user/BLOC4/Livrables/00-Base-Commune')
 OUT.mkdir(parents=True, exist_ok=True)
 
-# --- Contenu SWOT ---
+# =============================================================================
+# Donnees
+# =============================================================================
 STRENGTHS = [
-    "Notoriete et heritage (entreprise familiale depuis 1862)",
-    "Croissance soutenue : +30 % de CA entre 2023 et 2025",
-    "Expertise bois + design ecoresponsable (Sophie Crelin, Samir Oufrani)",
+    "Entreprise familiale depuis 1862, notoriete etablie",
+    "Croissance forte : +30 % de CA sur 2023-2025",
     "Virage e-commerce reussi (PrestaShop + bots SAV)",
-    "DSI structuree : DSI, Infra/Securite, PMO, Applicatif + devs",
-    "Tiffany Valentia (PMP + Scrum Master) porte la cellule PMO",
-    "Socle technique solide : cluster SQL AlwaysOn, Veeam, AD DS, GitLab",
-    "Jira Service Management deploye (base ITIL)",
+    "DSI structuree (DSI, Infra, PMO, Applicatif + devs)",
+    "Tiffany Valentia PMP + Scrum Master en cellule PMO",
+    "Socle technique solide : SQL AlwaysOn, Veeam, AD DS",
+    "Jira Service Management deploye (amorce ITIL)",
+    "Direction impliquee dans la strategie SI",
     "Culture SI presente chez les utilisateurs",
-    "Direction fortement impliquee dans la strategie SI",
 ]
-
 WEAKNESSES = [
-    "Pas de PRA / PCA formalise (incendie -> 150 K EUR de perte)",
-    "Echanges CSV fragiles entre GesProd et Dynamics",
-    "Workflow de commandes via mail + Excel (atelier fabrication)",
-    "Pas de replique AD DS en Finlande",
-    "VLAN unique Production + Conception (cloisonnement insuffisant)",
+    "Aucun PRA / PCA formalise (incendie = 150 K EUR)",
+    "Echanges CSV fragiles GesProd - Dynamics",
+    "Commandes production via mail + Excel",
+    "Pas de replica AD DS sur l'usine finlandaise",
+    "VLAN unique Production + Conception (cloisonnement)",
     "Migration Exchange non finalisee",
-    "Processus ITIL immatures (problemes, changement, connaissance)",
-    "Absence de MFA / SSO central face au teletravail croissant",
-    "VPN IPSec vieillissant pour 5+ sites europeens",
-    "Serveurs Windows Server 2019 en fin de vie",
+    "Processus ITIL immatures (problemes, changements)",
+    "Absence de MFA / SSO face au teletravail croissant",
+    "Serveurs Windows 2019 proches de l'obsolescence",
     "Processus de pilotage des projets SI en construction",
-    "Aucun tableau de bord d'usage / service IT pour les metiers",
-    "Barriere linguistique et culturelle avec l'usine finlandaise",
 ]
-
 OPPORTUNITIES = [
-    "Expansion europeenne : Allemagne, Italie, Espagne, Finlande",
-    "Marche B2B prive (promoteurs immobiliers) en croissance",
-    "Demande clients pour des produits ecoresponsables et traces",
-    "Industrie 4.0 : IoT, maintenance predictive, automatisation",
-    "Maturite du cloud (M365, Azure, iPaaS)",
-    "Cadres reglementaires (RGPD, CSRD) valorisant la conformite",
-    "Ecosystemes d'API et de donnees ouvertes (integration facilitee)",
-    "Disponibilite de freelances pour absorber les pics de charge",
+    "Expansion europeenne : DE, IT, ES, Finlande",
+    "Nouveau segment B2B prive (promoteurs immobiliers)",
+    "Demande clients produits ecoresponsables et traces",
+    "Industrie 4.0 : IoT, maintenance predictive",
+    "Maturite cloud (Microsoft 365, Azure, iPaaS)",
+    "Cadres reglementaires RGPD, NIS 2, CSRD",
+    "Ecosysteme d'API ouvert pour integrer les applis",
+    "Freelances mobilisables pour absorber la charge",
 ]
-
 THREATS = [
-    "Cybermenaces croissantes (ransomware, phishing) amplifiees par le teletravail",
-    "Pression reglementaire : RGPD, NIS 2, CSRD",
-    "Obsolescence technologique (Windows 2019, Exchange on-prem, VPN)",
-    "Dependance a des applications internes vieillissantes (GesProd, DocuFlow)",
-    "Penurie de competences IT et industrielles sur le marche",
-    "Volatilite des cours du bois et tensions d'approvisionnement",
-    "Concurrence europeenne accrue (entree sur de nouveaux marches)",
-    "Risque d'incident physique (incendie, sinistre site)",
+    "Cybermenaces amplifiees par le teletravail",
+    "Obsolescence technologique (Exchange, Win 2019, VPN)",
+    "Pression reglementaire RGPD, NIS 2, CSRD",
+    "Dependance a des applis internes vieillissantes",
+    "Penurie de competences IT et industrielles",
+    "Volatilite des cours du bois et approvisionnement",
+    "Concurrence europeenne accrue",
+    "Risques d'incident physique (incendie, sinistre)",
 ]
 
-# --- Generation Excel ---
-wb = Workbook()
-ws = wb.active
-ws.title = "SWOT Torpier"
+# =============================================================================
+# Generation PNG
+# =============================================================================
+def render_png() -> Path:
+    fig, ax, W, H = setup_figure()
+    add_header(
+        ax,
+        title="SWOT du Groupe Torpier",
+        subtitle="Diagnostic strategique - synthese interne et environnement externe",
+        width=W, height=H,
+        kicker="Phase 1 - Analyse de l'existant",
+    )
 
-THIN = Side(border_style="thin", color="AAAAAA")
-BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
-TITLE_FONT = Font(name="Calibri", size=16, bold=True, color="FFFFFF")
-SUB_FONT = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
-BODY_FONT = Font(name="Calibri", size=10, color="222222")
-FILL_S = PatternFill("solid", fgColor="2E7D32")  # vert - forces
-FILL_W = PatternFill("solid", fgColor="C62828")  # rouge - faiblesses
-FILL_O = PatternFill("solid", fgColor="1565C0")  # bleu - opportunites
-FILL_T = PatternFill("solid", fgColor="EF6C00")  # orange - menaces
-BG_S = PatternFill("solid", fgColor="E8F5E9")
-BG_W = PatternFill("solid", fgColor="FFEBEE")
-BG_O = PatternFill("solid", fgColor="E3F2FD")
-BG_T = PatternFill("solid", fgColor="FFF3E0")
+    # Zone utile pour les 4 quadrants
+    zone_y_bot = 5
+    zone_y_top = H - 8  # sous le header
+    zone_x_left = Charte.MARGIN_X
+    zone_x_right = W - Charte.MARGIN_X
 
-ws["A1"] = "SWOT - Groupe Torpier"
-ws["A1"].font = Font(name="Calibri", size=20, bold=True, color="1B3A5B")
-ws.merge_cells("A1:D1")
-ws.row_dimensions[1].height = 32
+    # 4 quadrants (2x2)
+    gap = 1.2
+    q_w = (zone_x_right - zone_x_left - gap) / 2
+    q_h = (zone_y_top - zone_y_bot - gap) / 2
 
-# quadrants : titres en ligne 3, listes en colonne
-def write_quadrant(col, fill_title, bg, title, items):
-    c = ws.cell(row=3, column=col, value=title)
-    c.font = SUB_FONT
-    c.fill = fill_title
-    c.alignment = Alignment(horizontal="center", vertical="center")
-    c.border = BORDER
-    for i, item in enumerate(items, start=4):
-        cell = ws.cell(row=i, column=col, value=f"- {item}")
-        cell.font = BODY_FONT
-        cell.fill = bg
-        cell.alignment = Alignment(wrap_text=True, vertical="top")
-        cell.border = BORDER
+    quadrants = [
+        # (title, items, x, y, color, soft, icon, subtitle)
+        ("Forces", STRENGTHS,
+         zone_x_left, zone_y_bot + q_h + gap,
+         Charte.SUCCESS, Charte.SUCCESS_SOFT, "+",
+         "Atouts internes a capitaliser"),
+        ("Faiblesses", WEAKNESSES,
+         zone_x_left + q_w + gap, zone_y_bot + q_h + gap,
+         Charte.DANGER, Charte.DANGER_SOFT, "-",
+         "Points faibles internes a corriger"),
+        ("Opportunites", OPPORTUNITIES,
+         zone_x_left, zone_y_bot,
+         Charte.INFO, Charte.INFO_SOFT, ">",
+         "Leviers externes a saisir"),
+        ("Menaces", THREATS,
+         zone_x_left + q_w + gap, zone_y_bot,
+         Charte.WARN, Charte.WARN_SOFT, "!",
+         "Risques externes a anticiper"),
+    ]
 
-write_quadrant(1, FILL_S, BG_S, "Forces (Strengths)", STRENGTHS)
-write_quadrant(2, FILL_W, BG_W, "Faiblesses (Weaknesses)", WEAKNESSES)
-write_quadrant(3, FILL_O, BG_O, "Opportunites (Opportunities)", OPPORTUNITIES)
-write_quadrant(4, FILL_T, BG_T, "Menaces (Threats)", THREATS)
+    band_h = 2.6  # hauteur du bandeau titre dans chaque carte
 
-for col_letter in "ABCD":
-    ws.column_dimensions[col_letter].width = 45
+    for title, items, x, y, color, soft, icon, subtitle in quadrants:
+        # ombre portee
+        shadow(ax, x, y, q_w, q_h)
+        # carte principale (fond)
+        ax.add_patch(patches.FancyBboxPatch(
+            (x, y), q_w, q_h,
+            boxstyle="round,pad=0.05,rounding_size=0.5",
+            linewidth=0.9, edgecolor=Charte.LINE,
+            facecolor="white", zorder=2))
+        # bandeau de titre colore (decoupe en haut)
+        ax.add_patch(patches.FancyBboxPatch(
+            (x, y + q_h - band_h), q_w, band_h,
+            boxstyle="round,pad=0.05,rounding_size=0.5",
+            linewidth=0, facecolor=color, zorder=3))
+        # masque bas du bandeau pour avoir le bandeau "collant"
+        ax.add_patch(patches.Rectangle(
+            (x, y + q_h - band_h), q_w, 0.5,
+            linewidth=0, facecolor=color, zorder=3))
+        # pastille icone
+        cx, cy = x + 1.6, y + q_h - band_h / 2
+        ax.add_patch(patches.Circle((cx, cy), 0.75,
+                                    facecolor="white",
+                                    edgecolor=color, lw=1.5, zorder=4))
+        ax.text(cx, cy, icon, ha="center", va="center",
+                fontsize=14, fontweight="bold", color=color,
+                zorder=5, family=Charte.FONT)
+        # titre
+        ax.text(x + 3.2, y + q_h - band_h / 2 + 0.3, title,
+                ha="left", va="center",
+                fontsize=16, fontweight="bold", color="white",
+                zorder=5, family=Charte.FONT)
+        # sous-titre
+        ax.text(x + 3.2, y + q_h - band_h / 2 - 0.7, subtitle,
+                ha="left", va="center",
+                fontsize=10, color="white", alpha=0.9,
+                zorder=5, family=Charte.FONT, style="italic")
 
-max_rows = max(len(STRENGTHS), len(WEAKNESSES), len(OPPORTUNITIES), len(THREATS))
-for r in range(4, 4 + max_rows):
-    ws.row_dimensions[r].height = 30
+        # items
+        item_y_top = y + q_h - band_h - 0.9
+        item_y_bot = y + 0.8
+        n = len(items)
+        line_spacing = (item_y_top - item_y_bot) / max(n, 1)
+        bullet_x = x + 1.1
+        text_x = x + 1.8
+        for i, item in enumerate(items):
+            yy = item_y_top - i * line_spacing - 0.15
+            # puce
+            ax.add_patch(patches.Circle((bullet_x, yy), 0.12,
+                                        facecolor=color, zorder=4))
+            # texte
+            ax.text(text_x, yy, item, ha="left", va="center",
+                    fontsize=10.2, color=Charte.INK,
+                    family=Charte.FONT, zorder=4)
 
-ws.row_dimensions[3].height = 26
+    add_footer(ax, page_label="Fiche 01 - SWOT", width=W, height=H)
 
-xlsx_path = OUT / "01-SWOT.xlsx"
-wb.save(xlsx_path)
-print(f"OK Excel : {xlsx_path}")
+    out = OUT / "01-SWOT.png"
+    save(fig, out)
+    return out
 
-# --- Generation PNG lisible ---
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 
-fig, ax = plt.subplots(figsize=(18, 12))
-ax.set_xlim(0, 10)
-ax.set_ylim(0, 10)
-ax.axis("off")
+# =============================================================================
+# Generation Excel propre
+# =============================================================================
+def render_xlsx() -> Path:
+    s = excel_styles()
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "SWOT Torpier"
 
-# Titre
-ax.text(5, 9.6, "SWOT - Groupe Torpier", ha="center", fontsize=22, fontweight="bold",
-        color="#1B3A5B")
+    # Page setup
+    ws.page_setup.orientation = ws.ORIENTATION_LANDSCAPE
+    ws.sheet_view.showGridLines = False
 
-quadrants = [
-    ("Forces", STRENGTHS, 0.2, 5, "#2E7D32", "#E8F5E9"),
-    ("Faiblesses", WEAKNESSES, 5.2, 5, "#C62828", "#FFEBEE"),
-    ("Opportunites", OPPORTUNITIES, 0.2, 0.2, "#1565C0", "#E3F2FD"),
-    ("Menaces", THREATS, 5.2, 0.2, "#EF6C00", "#FFF3E0"),
-]
+    # Bandeau accent (ligne 1)
+    ws.row_dimensions[1].height = 6
 
-for title, items, x, y, color_strong, color_soft in quadrants:
-    # fond
-    ax.add_patch(patches.FancyBboxPatch((x, y), 4.6, 4.3, boxstyle="round,pad=0.02",
-                                        linewidth=1, edgecolor=color_strong,
-                                        facecolor=color_soft))
-    # bandeau titre
-    ax.add_patch(patches.Rectangle((x, y + 3.8), 4.6, 0.5,
-                                   linewidth=0, facecolor=color_strong))
-    ax.text(x + 2.3, y + 4.05, title, ha="center", va="center",
-            fontsize=14, fontweight="bold", color="white")
-    # items
-    text = "\n".join([f"- {it}" for it in items])
-    ax.text(x + 0.15, y + 3.6, text, ha="left", va="top",
-            fontsize=9, color="#222222", wrap=True)
+    # Kicker + titre
+    ws["A2"] = "PHASE 1 - ANALYSE DE L'EXISTANT"
+    ws["A2"].font = s["kicker"]
+    ws["A3"] = "SWOT du Groupe Torpier"
+    ws["A3"].font = s["title"]
+    ws["A4"] = "Diagnostic strategique - synthese interne et environnement externe"
+    ws["A4"].font = s["subtitle"]
+    ws.merge_cells("A2:D2")
+    ws.merge_cells("A3:D3")
+    ws.merge_cells("A4:D4")
+    ws.row_dimensions[2].height = 18
+    ws.row_dimensions[3].height = 30
+    ws.row_dimensions[4].height = 22
 
-png_path = OUT / "01-SWOT.png"
-plt.tight_layout()
-plt.savefig(png_path, dpi=200, bbox_inches="tight", facecolor="white")
-plt.close()
-print(f"OK PNG   : {png_path}")
+    # En-tetes quadrants (ligne 6)
+    from openpyxl.styles import Alignment, Font, PatternFill
+    quadrants = [
+        ("Forces", STRENGTHS, Charte.SUCCESS, "Atouts internes a capitaliser"),
+        ("Faiblesses", WEAKNESSES, Charte.DANGER, "Points faibles a corriger"),
+        ("Opportunites", OPPORTUNITIES, Charte.INFO, "Leviers externes a saisir"),
+        ("Menaces", THREATS, Charte.WARN, "Risques externes a anticiper"),
+    ]
+    for j, (title, _items, color, subtitle) in enumerate(quadrants, 1):
+        c = ws.cell(row=6, column=j, value=title.upper())
+        c.font = Font(name=Charte.FONT, size=13, bold=True, color="FFFFFF")
+        c.fill = PatternFill("solid", fgColor=color.replace("#", ""))
+        c.alignment = s["align_center"]
+        c.border = s["border"]
+        c2 = ws.cell(row=7, column=j, value=subtitle)
+        c2.font = Font(name=Charte.FONT, size=9, italic=True, color="FFFFFF")
+        c2.fill = PatternFill("solid", fgColor=color.replace("#", ""))
+        c2.alignment = s["align_center"]
+        c2.border = s["border"]
+    ws.row_dimensions[6].height = 28
+    ws.row_dimensions[7].height = 22
+
+    max_len = max(len(q[1]) for q in quadrants)
+    for j, (_title, items, _color, _subtitle) in enumerate(quadrants, 1):
+        for i in range(max_len):
+            cell = ws.cell(row=8 + i, column=j,
+                           value=f"-  {items[i]}" if i < len(items) else "")
+            cell.font = s["body_font"]
+            cell.alignment = s["align_top"]
+            cell.border = s["border"]
+            if (8 + i) % 2 == 0:
+                cell.fill = s["fill_alt"]
+
+    for col_letter, width in zip("ABCD", [48, 48, 48, 48]):
+        ws.column_dimensions[col_letter].width = width
+    for r in range(8, 8 + max_len):
+        ws.row_dimensions[r].height = 28
+
+    # Footer
+    footer_row = 8 + max_len + 1
+    ws.cell(row=footer_row, column=1,
+            value=f"{Charte.PROJECT}  |  {Charte.AUTHOR}  |  {Charte.VERSION}")
+    ws.cell(row=footer_row, column=1).font = s["footer_font"]
+    ws.merge_cells(start_row=footer_row, start_column=1,
+                   end_row=footer_row, end_column=4)
+
+    out = OUT / "01-SWOT.xlsx"
+    wb.save(out)
+    return out
+
+
+if __name__ == "__main__":
+    p1 = render_png()
+    print(f"OK PNG   : {p1}")
+    p2 = render_xlsx()
+    print(f"OK Excel : {p2}")
