@@ -4,18 +4,20 @@
 > **Format** : 20 min de soutenance + 15 min d'échange. Support à la **forme irréprochable**, synthétique, axé sur le **pourquoi**.
 > **Notation** : grille bloc `/20`. Pondération entre `( )`. ⭐ = critères les plus pondérés.
 > **Principe** : choisir **1 axe d'amélioration** parmi les 5 et faire le **focus** dessus pour tout l'aval.
+>
+> **Origine du contenu** : `♻️ collectif` = repris tel quel du livrable collectif · `🔧 collectif+` = base collective à **approfondir/détailler** pour l'individuel · (sans marqueur) = **production individuelle**.
 
 ## Trame (≈ 16-17 diapos)
 
 ### 1. Modéliser les flux métiers & ressources techniques (9 pts)
 - [ ] **D1 — Titre** : posture nouveau responsable SI, contexte Torpier, nom
-- [ ] **D2 — Présentation entreprise & activité** : processus, **workflows des flux d'information** (exhaustif et clair) ⭐ **(3)**
-- [ ] **D3 — Compréhension synthétique de la stratégie** impulsée par la direction
-- [ ] **D4 — SI existant : schéma des 4 strates** (processus métiers / fonctions métiers / applications / infrastructure) ⭐⭐ *(partie des 4)*
-- [ ] **D5 — SI existant : topologie réseau + systèmes + données + applications** (représentation graphique) ⭐⭐ **(4 = critère le + lourd)**
-- [ ] **D6 — 5 axes d'amélioration** (applicatif, réseau, stockage, hébergement, accès…) + **1 indicateur de valeur** par axe **(2)**
+- [ ] `🔧 collectif+` **D2 — Présentation entreprise & activité** : processus, **workflows des flux d'information** (exhaustif et clair) — *part du contexte + SWOT collectif, à enrichir des workflows* ⭐ **(3)**
+- [ ] `♻️ collectif` **D3 — Compréhension synthétique de la stratégie** impulsée par la direction
+- [ ] `🔧 collectif+` **D4 — SI existant : schéma des 4 strates** (processus métiers / fonctions métiers / applications / infrastructure) — *assemble les 3 tableaux collectifs (processus, applis↔fonctions, infra↔applis) en un schéma 4 strates* ⭐⭐ *(partie des 4)*
+- [ ] **D5 — SI existant : topologie réseau + systèmes + données + applications** (représentation graphique) — *la topo réseau est à produire ; s'appuie sur le tableau infra collectif* ⭐⭐ **(4 = critère le + lourd)**
+- [ ] `♻️ collectif` **D6 — 5 axes d'amélioration** (applicatif, réseau, stockage, hébergement, accès…) + **1 indicateur de valeur** par axe — *mêmes 5 axes que le collectif* **(2)**
 - [ ] **D7 — Focus sur 1 axe choisi** : justification du choix (effet de levier sur l'adhésion direction)
-- [ ] **D8 — 5 projets opérationnels** de l'axe : titre explicite, périmètre, objectifs, **référentiel de gouvernance** (ex. ITIL) + processus/méthode préconisé
+- [ ] `🔧 collectif+` **D8 — 5 projets opérationnels** de l'axe : titre explicite, périmètre, objectifs, **référentiel de gouvernance** (ex. ITIL) + processus/méthode préconisé — *le référentiel découle de la comparaison des 3 référentiels du collectif*
 
 ### 2. Encadrer les équipes internes et/ou externes (6 pts)
 - [ ] **D9 — Rôles & responsabilités** couvrant les 5 projets, en accord avec **compétences + aspirations** des salariés **(1)**
