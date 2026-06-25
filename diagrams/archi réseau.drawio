@@ -1,0 +1,114 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="Pycw4XW93w4hWId34Im0">
+    <mxGraphModel dx="2934" dy="1584" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-1" parent="1" style="container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=#1192E8;fillColor=none;strokeWidth=1" value="" vertex="1">
+          <mxGeometry height="140" width="400" x="30" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-2" parent="8Qw1QVxGrFcmJz77cKt_-1" style="shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="VLAN 10 – Direction Générale " vertex="1">
+          <mxGeometry height="48" relative="1" width="48" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-3" parent="8Qw1QVxGrFcmJz77cKt_-2" style="fillColor=#1192E8;shape=mxgraph.ibm_cloud.vlan;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;" value="" vertex="1">
+          <mxGeometry height="24" relative="1" width="24" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-4" parent="8Qw1QVxGrFcmJz77cKt_-1" style="shape=rect;fillColor=#1192E8;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="48" relative="1" width="4" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-5" parent="1" style="container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=#1192E8;fillColor=none;strokeWidth=1" value="" vertex="1">
+          <mxGeometry height="140" width="400" x="30" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-6" parent="8Qw1QVxGrFcmJz77cKt_-5" style="shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="VLAN 20 – DSI (Postes clients IT)  " vertex="1">
+          <mxGeometry height="48" relative="1" width="48" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-7" parent="8Qw1QVxGrFcmJz77cKt_-6" style="fillColor=#1192E8;shape=mxgraph.ibm_cloud.vlan;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;" value="" vertex="1">
+          <mxGeometry height="24" relative="1" width="24" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-8" parent="8Qw1QVxGrFcmJz77cKt_-5" style="shape=rect;fillColor=#1192E8;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="48" relative="1" width="4" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-9" parent="1" style="container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=#1192E8;fillColor=none;strokeWidth=1" value="" vertex="1">
+          <mxGeometry height="140" width="400" x="30" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-10" parent="8Qw1QVxGrFcmJz77cKt_-9" style="shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="VLAN 21 – DSI (Serveurs &amp; Infra IT)   " vertex="1">
+          <mxGeometry height="48" relative="1" width="48" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-11" parent="8Qw1QVxGrFcmJz77cKt_-10" style="fillColor=#1192E8;shape=mxgraph.ibm_cloud.vlan;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;" value="" vertex="1">
+          <mxGeometry height="24" relative="1" width="24" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-12" parent="8Qw1QVxGrFcmJz77cKt_-9" style="shape=rect;fillColor=#1192E8;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="48" relative="1" width="4" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-13" parent="1" style="container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=#1192E8;fillColor=none;strokeWidth=1" value="" vertex="1">
+          <mxGeometry height="140" width="400" x="30" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-14" parent="8Qw1QVxGrFcmJz77cKt_-13" style="shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="VLAN 30 – Administratif &amp; RH   " vertex="1">
+          <mxGeometry height="48" relative="1" width="48" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-15" parent="8Qw1QVxGrFcmJz77cKt_-14" style="fillColor=#1192E8;shape=mxgraph.ibm_cloud.vlan;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;" value="" vertex="1">
+          <mxGeometry height="24" relative="1" width="24" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-16" parent="8Qw1QVxGrFcmJz77cKt_-13" style="shape=rect;fillColor=#1192E8;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="48" relative="1" width="4" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-17" parent="1" style="container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=#1192E8;fillColor=none;strokeWidth=1" value="" vertex="1">
+          <mxGeometry height="140" width="400" x="30" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-18" parent="8Qw1QVxGrFcmJz77cKt_-17" style="shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="VLAN 40 – Commercial &amp; Marketing   " vertex="1">
+          <mxGeometry height="48" relative="1" width="48" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-19" parent="8Qw1QVxGrFcmJz77cKt_-18" style="fillColor=#1192E8;shape=mxgraph.ibm_cloud.vlan;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;" value="" vertex="1">
+          <mxGeometry height="24" relative="1" width="24" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-20" parent="8Qw1QVxGrFcmJz77cKt_-17" style="shape=rect;fillColor=#1192E8;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="48" relative="1" width="4" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-21" parent="1" style="container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=#1192E8;fillColor=none;strokeWidth=1" value="" vertex="1">
+          <mxGeometry height="140" width="500" x="30" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-22" parent="8Qw1QVxGrFcmJz77cKt_-21" style="shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="VLAN 50 – Production &amp; Conception    " vertex="1">
+          <mxGeometry height="48" relative="1" width="48" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-23" parent="8Qw1QVxGrFcmJz77cKt_-22" style="fillColor=#1192E8;shape=mxgraph.ibm_cloud.vlan;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;" value="" vertex="1">
+          <mxGeometry height="24" relative="1" width="24" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-24" parent="8Qw1QVxGrFcmJz77cKt_-21" style="shape=rect;fillColor=#1192E8;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="48" relative="1" width="4" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-25" parent="1" style="container=1;collapsible=0;expand=0;recursiveResize=0;html=1;whiteSpace=wrap;strokeColor=#1192E8;fillColor=none;strokeWidth=1" value="" vertex="1">
+          <mxGeometry height="140" width="500" x="30" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-26" parent="8Qw1QVxGrFcmJz77cKt_-25" style="shape=rect;fillColor=none;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="VLAN 60 – Usine Finlandaise &#xa;    " vertex="1">
+          <mxGeometry height="48" relative="1" width="48" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-27" parent="8Qw1QVxGrFcmJz77cKt_-26" style="fillColor=#1192E8;shape=mxgraph.ibm_cloud.vlan;strokeColor=none;dashed=0;outlineConnect=0;html=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;part=1;movable=0;resizable=0;rotatable=0;" value="" vertex="1">
+          <mxGeometry height="24" relative="1" width="24" as="geometry">
+            <mxPoint x="12" y="12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-28" parent="8Qw1QVxGrFcmJz77cKt_-25" style="shape=rect;fillColor=#1192E8;aspect=fixed;resizable=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;strokeColor=none;part=1;spacingLeft=5;fontSize=14;" value="" vertex="1">
+          <mxGeometry height="48" relative="1" width="4" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-34" parent="1" style="html=1;strokeWidth=1;shadow=0;dashed=0;shape=mxgraph.ios7.misc.vpn;fillColor=#007AFF;strokeColor=none;buttonText=;strokeColor2=#222222;fontColor=#222222;fontSize=8;verticalLabelPosition=bottom;verticalAlign=top;align=center;sketch=0;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="550" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="8Qw1QVxGrFcmJz77cKt_-35" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Fortinet" vertex="1">
+          <mxGeometry height="30" width="60" x="540" y="650" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

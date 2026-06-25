@@ -1,0 +1,13 @@
+# Fichiers temporaires Office
+~$*
+
+# Python
+__pycache__/
+*.pyc
+
+# Aperçus / artefacts de travail
+_preview_*.png
+_tpl_sheet.png
+
+# Éditeur
+.vscode/
