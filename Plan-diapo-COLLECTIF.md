@@ -13,7 +13,7 @@
 - [ ] **D4 — Cartographie des processus métiers** supportés par le SI + **tâches principales + acteurs** (représentation visuelle) **(2)**
 - [ ] **D5 — Tableau applications du SI ↔ fonction(s) métier(s)** utilisatrices **(2)**
 - [ ] **D6 — digramme de deploiemente** (serveurs + éléments actifs réseau) ↔ **applications supportées** **(2)**
-- [ ] **D7 — Points forts / faibles du SI → 5 axes d'amélioration** cohérents avec le contexte **(1)**
+- [ ] **D7 — 5 axes d'amélioration** cohérents avec le contexte **(1)**
 - [ ] **D8 — Comparaison de 3 référentiels** (ITIL / COBIT / Scrum-Agile) : **avantages + limites pour Torpier** ⭐ **(2)**
 - [ ] **D9 — Organisation globale des équipes SI** : relations **hiérarchiques + transversales** (le qui-fait-quoi) **(2)**
 - [ ] **D10 — Matrice RACI** des responsabilités incluant les **parties prenantes clés** ⭐ **(2)**
