@@ -35,31 +35,33 @@ L'axe applicatif est le **socle** de l'« optimisation du SI » et de la « dive
 ## C. 5 projets opérationnels de l'axe Applicatif (D8)
 
 > Chaque projet : **titre explicite · périmètre · objectifs · référentiel de gouvernance + processus/méthode préconisé**.
+>
+> ⚠️ **Cohérence référentiels** : chaque référentiel provient des **3 comparés au collectif** — **ITIL / COBIT / Scrum-Agile** (cf. `Plan-diapo-COLLECTIF.md` D8 et consigne « le référentiel découle de la comparaison des 3 référentiels du collectif »). Répartition : **Scrum ×2, COBIT ×2, ITIL ×1**. *(Aucun TOGAF : hors des 3.)*
 
 ### Projet 1 — Plateforme d'intégration & API Management
 - **Périmètre** : remplacer les échanges de fichiers (CSV GesProd↔Dynamics, sources Excel) par un bus d'intégration / API ; connecteurs Dynamics, GesProd, SAGE, Qualéval.
 - **Objectifs** : flux temps réel, fin des ressaisies, fiabilité des données partagées.
-- **Référentiel & méthode** : **TOGAF** (urbanisation — méthode **ADM**) pour le cadrage d'architecture + **Scrum** (sprints, incréments) pour la réalisation.
+- **Référentiel & méthode** : **Scrum / Agile** — projet de construction logicielle livré par incréments (backlog produit, **sprints de 2 semaines**, revues de sprint).
 
 ### Projet 2 — Intégration e-commerce ↔ SI
 - **Périmètre** : synchroniser commandes, stocks et livraison entre PrestaShop (OVH), Microsoft Dynamics et GesProd.
 - **Objectifs** : parcours commande de bout en bout, support de la diversification vers les clients privés.
-- **Référentiel & méthode** : **Scrum / Agile** (backlog produit, sprints, revues de sprint).
+- **Référentiel & méthode** : **Scrum / Agile** (backlog produit, sprints, démos / revues de sprint).
 
 ### Projet 3 — Entrepôt de données & fiabilisation décisionnelle (BI)
 - **Périmètre** : datawarehouse alimenté par les applications (au lieu d'Excel), refonte des tableaux de bord Power BI.
 - **Objectifs** : donnée unique et fiable pour le pilotage de la DG ; socle de la traçabilité des matières (développement durable).
-- **Référentiel & méthode** : **COBIT** (gouvernance et qualité de la donnée — domaine **APO**, « gérer les données »).
+- **Référentiel & méthode** : **COBIT** — processus **APO14 « Gérer les données »** (gouvernance et qualité de la donnée).
 
 ### Projet 4 — Urbanisation & cartographie applicative
 - **Périmètre** : référentiel d'architecture, cartographie des applications et des flux, comité d'architecture, rationalisation du parc applicatif.
 - **Objectifs** : cohérence globale du SI (feuille de route du DSI), maîtrise de la dette technique.
-- **Référentiel & méthode** : **TOGAF / COBIT** (gouvernance d'architecture, processus de revue d'architecture).
+- **Référentiel & méthode** : **COBIT** — processus **APO03 « Gérer l'architecture d'entreprise »** (gouvernance et revue d'architecture).
 
 ### Projet 5 — Industrialisation du cycle de vie des applications internes (DevOps)
 - **Périmètre** : GesProd, Qualéval, DocuFlow — CI/CD sur l'instance **GitLab** existante, tests automatisés, mises en production maîtrisées.
 - **Objectifs** : qualité logicielle, réduction des incidents post-déploiement, capacité à absorber la charge (renforts freelances).
-- **Référentiel & méthode** : **ITIL** (gestion des **mises en production et déploiements** + gestion des **changements**) couplé à une démarche **DevOps**.
+- **Référentiel & méthode** : **ITIL** — pratiques **Release Management / Deployment Management** + **Change Enablement** (gestion des changements), couplées à une démarche **DevOps**.
 
 ---
 
@@ -67,4 +69,4 @@ L'axe applicatif est le **socle** de l'« optimisation du SI » et de la « dive
 - **Mêmes 5 axes** au collectif (D7) et à l'individuel (D6).
 - **1 indicateur de valeur** par axe (exigé en D6 individuel) — colonne dédiée du tableau A.
 - Tout l'aval individuel (équipes, externes, conduite du changement) porte sur l'axe **Applicatif**.
-- Argumentation par référentiel : **ITIL** (exploitation / services), **COBIT** (gouvernance / donnée), **Scrum / TOGAF** (développements / urbanisation).
+- Argumentation par référentiel **(strictement les 3 du collectif)** : **ITIL** (exploitation / services — *run*), **COBIT** (gouvernance : données APO14, architecture APO03), **Scrum / Agile** (développements — *build*). Aucun référentiel hors de ces 3 (pas de TOGAF).
